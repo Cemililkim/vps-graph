@@ -1,0 +1,5 @@
+ssh.service loaded active running OpenBSD Secure Shell server
+netdata.service loaded active running Netdata
+systemd-fsck@dev-disk-by\x2duuid-352C\x2dFCAB.service loaded active exited File System Check on /dev/disk/by-uuid/352C-FCAB
+docker.service loaded active running Docker Application Container Engine
+missing.service not-found inactive dead Missing compatibility unit

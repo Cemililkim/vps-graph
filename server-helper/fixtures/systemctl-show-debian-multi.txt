@@ -1,0 +1,23 @@
+Type=simple
+MainPID=1714490
+ControlGroup=/system.slice/netdata.service
+User=root
+Group=netdata
+Id=netdata.service
+ActiveState=active
+SubState=running
+
+Id=ssh.service
+Type=notify-reload
+MainPID=402
+ControlGroup=/system.slice/ssh.service
+User=root
+Group=
+ActiveState=active
+SubState=running
+
+Description=Middle identifier
+LoadState=loaded
+Id=middle.service
+Type=oneshot
+ControlGroup=/system.slice/middle.service

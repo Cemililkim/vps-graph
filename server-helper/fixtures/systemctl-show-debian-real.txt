@@ -1,0 +1,31 @@
+Id=ssh.service
+Description=OpenBSD Secure Shell server
+LoadState=loaded
+ActiveState=active
+SubState=running
+MainPID=402
+ControlGroup=/system.slice/ssh.service
+
+Id=netdata.service
+Description=Netdata
+LoadState=loaded
+ActiveState=active
+SubState=running
+MainPID=1714490
+ControlGroup=/system.slice/netdata.service
+
+Id=systemd-fsck@dev-disk-by\x2duuid-352C\x2dFCAB.service
+Description=File System Check
+LoadState=loaded
+ActiveState=active
+SubState=exited
+MainPID=0
+ControlGroup=/system.slice/systemd-fsck@dev-disk-by\x2duuid-352C\x2dFCAB.service
+
+Id=docker.service
+Description=Docker Application Container Engine
+LoadState=loaded
+ActiveState=active
+SubState=running
+MainPID=700
+ControlGroup=/system.slice/docker.service

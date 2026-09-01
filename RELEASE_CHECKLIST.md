@@ -1,0 +1,33 @@
+# VPS Graph 0.1.0 release checklist
+
+- [ ] all automated tests green
+- [ ] Linux helper security tests green
+- [ ] npm production audit clean
+- [ ] Plugin Verifier compatible
+- [ ] secret scan clean
+- [ ] public docs reviewed
+- [ ] Apache-2.0 finalized
+- [ ] publisher identity finalized
+- [ ] security/support contact finalized
+- [ ] GitHub repository URL finalized
+- [ ] helper distribution paths finalized
+- [ ] screenshots sanitized and final
+- [ ] icon final
+- [ ] version final
+- [ ] plugin archive inspected
+- [ ] real Debian scan previously accepted
+- [ ] remembered connection accepted
+- [ ] Changes/history accepted
+- [ ] failed rescan behavior accepted
+- [ ] helper security commands
+- [ ] Marketplace metadata reviewed
+- [ ] no em dash in VPS Graph user-facing/public copy
+- [ ] first-use Resource Explorer opens by default
+- [ ] preferred Tool Window width behavior validated
+- [ ] user manual resizing remains respected
+- [ ] Disconnect action validated
+- [ ] Disconnect performs no remote command
+- [ ] Disconnect preserves snapshots/history
+- [ ] Disconnect preserves remembered connection when enabled
+- [ ] reconnect does not happen automatically
+- [ ] stale scan cannot repopulate UI after Disconnect

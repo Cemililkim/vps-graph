@@ -1,0 +1,3 @@
+NAME="Ubuntu"
+VERSION="24.04.3 LTS (Noble Numbat)"
+VERSION_ID="24.04"

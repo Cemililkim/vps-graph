@@ -1,0 +1,53 @@
+[
+  {
+    "Id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "Name": "/compose-web",
+    "Config": {
+      "Image": "example/web:1.2.3",
+      "Env": ["DATABASE_URL=postgresql://db.internal/app", "API_KEY=super-secret", "JWT_SECRET=jwt-value", "PASSWORD=do-not-leak"],
+      "Labels": {
+        "com.docker.compose.project": "alpha",
+        "com.docker.compose.service": "web",
+        "com.docker.compose.project.working_dir": "/srv/alpha",
+        "com.docker.compose.project.config_files": "/srv/alpha/compose.yml",
+        "com.example.sensitive": "super-secret",
+        "traefik.http.routers.web.rule": "Host(`private.example.test`)"
+      },
+      "Cmd": ["/bin/sh", "-c", "never expose this"],
+      "Entrypoint": ["secret-entrypoint"]
+    },
+    "State": {"Status": "running", "Health": {"Log": ["do not expose"]}},
+    "HostConfig": {"RestartPolicy": {"Name": "unless-stopped"}, "Binds": ["/secret:/run/secrets/app"]},
+    "NetworkSettings": {
+      "Ports": {
+        "80/tcp": [{"HostIp": "0.0.0.0", "HostPort": "8080"}],
+        "443/tcp": null
+      },
+      "Networks": {"backend": {"IPAddress": "172.18.0.2"}, "frontend": {"IPAddress": "172.19.0.2"}}
+    },
+    "Mounts": [
+      {"Type": "bind", "Source": "/srv/alpha/data", "Destination": "/app/data", "RW": true},
+      {"Type": "volume", "Name": "alpha-cache", "Source": "/var/lib/docker/volumes/alpha-cache/_data", "Destination": "/cache", "RW": false},
+      {"Type": "bind", "Source": "/srv/alpha/secrets", "Destination": "/run/secrets/app", "RW": false}
+    ],
+    "UnknownFutureField": {"must": "not appear"}
+  },
+  {
+    "Id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "Name": "/standalone-worker",
+    "Config": {"Image": "example/worker:2.0", "Env": ["PASSWORD=hidden"], "Labels": {"private.label": "hidden"}},
+    "State": {"Status": "exited"},
+    "HostConfig": {"RestartPolicy": {"Name": "no"}},
+    "NetworkSettings": {"Ports": {}, "Networks": {"jobs": {"Gateway": "172.20.0.1"}}},
+    "Mounts": []
+  },
+  {
+    "Id": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "Name": "/compose-api",
+    "Config": {"Image": "example/api:3.0", "Labels": {"com.docker.compose.project": "beta", "com.docker.compose.service": "api", "com.docker.compose.project.working_dir": "/srv/beta", "unrelated": "API_KEY=not-allowed"}},
+    "State": {"Status": "running"},
+    "HostConfig": {"RestartPolicy": {"Name": "always"}},
+    "NetworkSettings": {"Ports": {"3000/tcp": [{"HostIp": "127.0.0.1", "HostPort": "3000"}]}, "Networks": {"beta": {}}},
+    "Mounts": []
+  }
+]

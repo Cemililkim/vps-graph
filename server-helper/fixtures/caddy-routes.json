@@ -1,0 +1,67 @@
+{
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "routes": [
+            {
+              "match": [{"host": ["www.example.com", "example.com"]}],
+              "handle": [{
+                "handler": "reverse_proxy",
+                "upstreams": [
+                  {"dial": "portfolio-web:3000"},
+                  {"dial": "localhost:9000"}
+                ]
+              }]
+            },
+            {
+              "match": [{"host": ["*.example.net"]}],
+              "handle": [{
+                "handler": "reverse_proxy",
+                "upstreams": [
+                  {"dial": "127.0.0.1:8080"},
+                  {"dial": "[::1]:8080"}
+                ]
+              }]
+            },
+            {
+              "match": [{"host": ["nested.example.org"], "path": ["/api/*"]}],
+              "handle": [{
+                "handler": "subroute",
+                "routes": [{
+                  "handle": [{
+                    "handler": "reverse_proxy",
+                    "upstreams": [{"dial": "nested-api:4000"}]
+                  }]
+                }]
+              }]
+            },
+            {
+              "handle": [{
+                "handler": "reverse_proxy",
+                "upstreams": [{"dial": "catch-all:8081"}]
+              }]
+            },
+            {
+              "match": [{"host": ["dynamic.example.org"]}],
+              "handle": [{
+                "handler": "reverse_proxy",
+                "dynamic": {"source": "a", "secret": "must-not-escape"}
+              }]
+            },
+            {
+              "match": [{"host": ["placeholder.example.org"]}],
+              "handle": [{
+                "handler": "reverse_proxy",
+                "upstreams": [{"dial": "{env.UPSTREAM}"}]
+              }]
+            },
+            {
+              "handle": [{"handler": "unknown_module", "payload": "discard-me"}]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

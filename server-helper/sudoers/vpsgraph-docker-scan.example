@@ -1,0 +1,1 @@
+vpsgraph ALL=(root) NOPASSWD: /usr/local/libexec/vpsgraph-docker-scan ""

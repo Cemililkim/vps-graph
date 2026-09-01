@@ -1,0 +1,30 @@
+<idea-plugin>
+    <id>com.ilkimgul.vpsgraph</id>
+    <name>VPS Graph</name>
+    <vendor email="cemililkimteke5934@gmail.com" url="https://github.com/cemililkim/vps-graph">Cemil İlkim Teke</vendor>
+    <category>Tools Integration</category>
+    <description><![CDATA[
+        Explore what is running on one Linux VPS and how its infrastructure connects. VPS Graph performs manual, read-only SSH scans and presents sanitized Docker, Compose, Caddy, Systemd, listener, and local change-history data without a cloud backend or remote management surface.
+    ]]></description>
+    <change-notes><![CDATA[
+        <p>Initial public beta.</p>
+        <ul>
+          <li>Read-only SSH host discovery with strict known_hosts verification.</li>
+          <li>Optional sanitized Docker, Compose, Caddy, Systemd, and listener discovery.</li>
+          <li>Local infrastructure snapshots and evidence-qualified Changes history.</li>
+          <li>First-run setup guidance, remembered connection fields, and local Disconnect.</li>
+        </ul>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <iconMapper mappingFile="VpsGraphIconMappings.json" />
+        <toolWindow
+            id="VPS Graph"
+            icon="/icons/vpsGraphToolWindow.svg"
+            anchor="right"
+            factoryClass="com.ilkimgul.vpsgraph.plugin.VpsGraphToolWindowFactory"
+        />
+    </extensions>
+</idea-plugin>

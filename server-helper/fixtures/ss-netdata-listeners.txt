@@ -1,0 +1,2 @@
+tcp LISTEN 0 4096 127.0.0.1:19999 0.0.0.0:* users:(("netdata",pid=1714490,fd=6))
+tcp LISTEN 0 4096 172.17.0.1:19999 0.0.0.0:* users:(("netdata",pid=1714490,fd=8))

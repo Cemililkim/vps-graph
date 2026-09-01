@@ -1,0 +1,11 @@
+Type=simple
+MainPID=1714490
+ControlGroup=/system.slice/netdata.service
+User=root
+Group=netdata
+Id=netdata.service
+ActiveState=active
+SubState=running
+LoadState=loaded
+UnitFileState=enabled
+Description=Netdata, X-Ray Vision for your infrastructure!

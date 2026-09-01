@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "engine": {"version": "28.3.2"},
+  "composeProjects": [{"project": "portfolio"}, {"project": "dialens"}, {"project": "automation"}],
+  "containers": [
+    {"id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","name":"caddy","image":"caddy:2-alpine","state":"running","ports":[],"mounts":[],"networks":["web"]},
+    {"id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","name":"portfolio-web","image":"portfolio-web","state":"running","compose":{"project":"portfolio","service":"web"},"ports":[{"containerPort":"3000","protocol":"tcp"}],"mounts":[],"networks":["portfolio_default","web"]},
+    {"id":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","name":"portfolio-api","image":"portfolio-api","state":"running","compose":{"project":"portfolio","service":"api"},"ports":[{"containerPort":"4000","protocol":"tcp"}],"mounts":[],"networks":["portfolio_default","web"]},
+    {"id":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","name":"dialens-api","image":"dialens-api","state":"stopped","compose":{"project":"dialens","service":"api"},"ports":[{"containerPort":"8000","protocol":"tcp"}],"mounts":[],"networks":["web"]},
+    {"id":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee","name":"n8n","image":"n8nio/n8n","state":"running","compose":{"project":"automation","service":"n8n"},"ports":[{"containerPort":"5678","protocol":"tcp"}],"mounts":[],"networks":["web"]}
+  ],
+  "caddy": {
+    "status": "DISCOVERED",
+    "instances": [{
+      "containerId":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "containerName":"caddy",
+      "image":"caddy:2-alpine",
+      "status":"DISCOVERED",
+      "routes":[
+        {"hosts":["admin.example.com"],"hostless":false,"upstreams":[{"dial":"portfolio-web:3000"}]},
+        {"hosts":["api.example.com"],"hostless":false,"paths":["/api/*"],"upstreams":[{"dial":"portfolio-api:4000"}]},
+        {"hosts":["api.example.net"],"hostless":false,"upstreams":[{"dial":"dialens-api:8000"}]},
+        {"hosts":["Example.COM.","www.example.com"],"hostless":false,"upstreams":[{"dial":"portfolio-web:3000"}]},
+        {"hosts":["monitor.example.net"],"hostless":false,"upstreams":[{"dial":"host.docker.internal:19999"}]},
+        {"hosts":["automation.example.net"],"hostless":false,"upstreams":[{"dial":"n8n:5678"}]}
+      ]
+    }]
+  }
+}

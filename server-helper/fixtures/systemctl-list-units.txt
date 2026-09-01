@@ -1,0 +1,5 @@
+alpha.service loaded active running Alpha application
+disabled.service loaded inactive dead Disabled application
+failed.service loaded failed failed Failed application
+not-a-service.socket loaded active listening Socket unit
+bad\x00.service loaded active running Invalid

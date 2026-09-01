@@ -1,0 +1,18 @@
+# Repository text files use LF by default.
+* text=auto eol=lf
+
+# Native Windows scripts may use CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Explicit binaries.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+*.jar binary
+*.gz binary
+*.tar binary
+*.af binary

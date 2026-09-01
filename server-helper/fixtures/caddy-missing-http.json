@@ -1,0 +1,7 @@
+{
+  "apps": {
+    "tls": {
+      "certificates": {"load_files": [{"certificate": "do-not-read", "key": "private_key"}]}
+    }
+  }
+}

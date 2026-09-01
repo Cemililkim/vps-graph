@@ -1,0 +1,27 @@
+Id=alpha.service
+Description=Alpha application
+LoadState=loaded
+ActiveState=active
+SubState=running
+UnitFileState=enabled
+MainPID=101
+ControlGroup=/system.slice/alpha.service
+Type=simple
+User=alpha
+Group=alpha
+Environment=API_KEY=super-secret
+Environment=JWT_SECRET=never-return
+Environment=PASSWORD=super-secret
+Environment=TOKEN=never-return
+LoadCredential=PRIVATE_KEY=never-return
+ExecStart=/usr/bin/alpha --password super-secret
+
+Id=disabled.service
+Description=Disabled application
+LoadState=loaded
+ActiveState=inactive
+SubState=dead
+UnitFileState=disabled
+ControlGroup=/system.slice/disabled.service
+Environment=DATABASE_URL=postgresql://private.example.test
+AWS_SECRET_ACCESS_KEY=never-return

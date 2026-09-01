@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "engine": { "version": "29.4.1", "Secret": "discard" },
+  "composeProjects": [
+    { "project": "portfolio", "workingDirectory": "/srv/portfolio", "configFiles": "/srv/portfolio/compose.yml", "Token": "discard" },
+    { "project": "caddy", "workingDirectory": "/srv/caddy", "configFiles": "/srv/caddy/compose.yml" }
+  ],
+  "containers": [
+    {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "name": "portfolio-api",
+      "image": "portfolio-api:latest",
+      "state": "running",
+      "restartPolicy": "always",
+      "compose": { "project": "portfolio", "service": "api", "workingDirectory": "/srv/portfolio", "configFiles": "/srv/portfolio/compose.yml", "Labels": "discard" },
+      "ports": [{ "containerPort": "4000", "protocol": "tcp" }, { "containerPort": "443", "protocol": "tcp", "hostIp": "[::]", "hostPort": "443" }],
+      "mounts": [{ "type": "bind", "source": "/srv/portfolio/uploads", "destination": "/app/uploads", "readOnly": false }, { "type": "volume", "source": "/var/lib/docker/volumes/data", "volumeName": "portfolio-data", "destination": "/data", "readOnly": true }],
+      "networks": ["web", "portfolio_default"],
+      "Env": ["DATABASE_URL=postgres://secret"], "Password": "secret", "Token": "secret", "Secret": "secret", "Cmd": ["do not expose"], "Entrypoint": ["do not expose"], "Labels": { "private": "secret" }
+    },
+    {
+      "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "name": "portfolio-web",
+      "image": "portfolio-web:latest",
+      "state": "exited",
+      "restartPolicy": "unless-stopped",
+      "compose": { "project": "portfolio", "service": "web" },
+      "ports": [], "mounts": [], "networks": ["web", "portfolio_default"]
+    },
+    {
+      "id": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "name": "worker",
+      "image": "worker:latest",
+      "state": "running",
+      "restartPolicy": "no",
+      "ports": [{ "containerPort": "3000", "protocol": "tcp", "hostIp": "0.0.0.0", "hostPort": "3000" }],
+      "mounts": [], "networks": ["jobs"]
+    }
+  ],
+  "unknown": "DATABASE_URL=should-never-propagate"
+}

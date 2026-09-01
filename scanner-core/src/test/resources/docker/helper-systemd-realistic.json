@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "engine": {"version": "28.3.2"},
+  "composeProjects": [{"project": "portfolio"}],
+  "containers": [
+    {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "name": "caddy",
+      "image": "caddy:2-alpine",
+      "state": "running",
+      "ports": [
+        {"containerPort":"80","protocol":"tcp","hostIp":"0.0.0.0","hostPort":"80"},
+        {"containerPort":"80","protocol":"tcp","hostIp":"[::]","hostPort":"80"},
+        {"containerPort":"443","protocol":"tcp","hostIp":"0.0.0.0","hostPort":"443"},
+        {"containerPort":"443","protocol":"tcp","hostIp":"[::]","hostPort":"443"}
+      ],
+      "mounts": [],
+      "networks": ["web"]
+    },
+    {
+      "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "name": "portfolio-web",
+      "state": "running",
+      "compose": {"project":"portfolio","service":"web"},
+      "ports": [{"containerPort":"3000","protocol":"tcp"}],
+      "mounts": [],
+      "networks": ["web"]
+    }
+  ],
+  "caddy": {
+    "status": "DISCOVERED",
+    "instances": [{
+      "containerId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "containerName": "caddy",
+      "image": "caddy:2-alpine",
+      "status": "DISCOVERED",
+      "routes": [
+        {"hosts":["monitor.example.net"],"hostless":false,"upstreams":[{"dial":"host.docker.internal:19999"}]},
+        {"hosts":["portfolio.example.net"],"hostless":false,"upstreams":[{"dial":"portfolio-web:3000"}]}
+      ]
+    }]
+  },
+  "systemd": {
+    "status": "DISCOVERED",
+    "statusReasons": [],
+    "services": [
+      {"unit":"ssh.service","description":"OpenBSD Secure Shell server","loadState":"loaded","activeState":"active","subState":"running","unitFileState":"enabled","serviceType":"notify","user":"root","controlGroup":"/system.slice/ssh.service"},
+      {"unit":"netdata.service","description":"Netdata","loadState":"loaded","activeState":"active","subState":"running","unitFileState":"enabled","serviceType":"simple","user":"root","group":"netdata","controlGroup":"/system.slice/netdata.service"},
+      {"unit":"networking.service","description":"Raise network interfaces","loadState":"loaded","activeState":"active","subState":"exited","unitFileState":"enabled","serviceType":"oneshot","user":"root","controlGroup":"/system.slice/networking.service"},
+      {"unit":"systemd-fsck@dev-disk-by\\x2duuid-352C\\x2dFCAB.service","description":"File System Check","loadState":"loaded","activeState":"active","subState":"exited","serviceType":"oneshot","controlGroup":"/system.slice/systemd-fsck@dev-disk-by\\x2duuid-352C\\x2dFCAB.service"},
+      {"unit":"docker.service","description":"Docker Application Container Engine","loadState":"loaded","activeState":"active","subState":"running","unitFileState":"enabled","serviceType":"notify","user":"root","controlGroup":"/system.slice/docker.service"}
+    ],
+    "unknown": "discard"
+  },
+  "listeners": {
+    "status": "DISCOVERED",
+    "statusReasons": [],
+    "items": [
+      {"protocol":"tcp","localAddress":"0.0.0.0","port":22,"wildcard":true,"loopback":false,"ownershipState":"SYSTEMD_SERVICE","systemdUnit":"ssh.service","processName":"sshd"},
+      {"protocol":"tcp","localAddress":"::","port":22,"wildcard":true,"loopback":false,"ownershipState":"SYSTEMD_SERVICE","systemdUnit":"ssh.service","processName":"sshd"},
+      {"protocol":"tcp","localAddress":"127.0.0.1","port":19999,"wildcard":false,"loopback":true,"ownershipState":"SYSTEMD_SERVICE","systemdUnit":"netdata.service","processName":"netdata"},
+      {"protocol":"tcp","localAddress":"172.17.0.1","port":19999,"wildcard":false,"loopback":false,"ownershipState":"SYSTEMD_SERVICE","systemdUnit":"netdata.service","processName":"netdata"},
+      {"protocol":"tcp","localAddress":"0.0.0.0","port":80,"wildcard":true,"loopback":false,"ownershipState":"UNRESOLVED","processName":"docker-proxy"},
+      {"protocol":"tcp","localAddress":"::","port":80,"wildcard":true,"loopback":false,"ownershipState":"UNRESOLVED","processName":"docker-proxy"},
+      {"protocol":"tcp","localAddress":"0.0.0.0","port":443,"wildcard":true,"loopback":false,"ownershipState":"UNRESOLVED","processName":"docker-proxy"},
+      {"protocol":"tcp","localAddress":"::","port":443,"wildcard":true,"loopback":false,"ownershipState":"UNRESOLVED","processName":"docker-proxy"},
+      {"protocol":"udp","localAddress":"2001:db8:10::1","port":546,"wildcard":false,"loopback":false,"ownershipState":"SYSTEMD_SERVICE","systemdUnit":"networking.service"},
+      {"protocol":"udp","localAddress":"fe80::eac9:da0a:d32:2190%eth0","port":546,"wildcard":false,"loopback":false,"ownershipState":"SYSTEMD_SERVICE","systemdUnit":"networking.service"}
+    ],
+    "raw": "discard"
+  }
+}

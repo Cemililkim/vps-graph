@@ -1,0 +1,14 @@
+{
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "routes": [{
+            "match": [{"host": ["static.example.com"]}],
+            "handle": [{"handler": "static_response", "body": "not infrastructure metadata"}]
+          }]
+        }
+      }
+    }
+  }
+}
