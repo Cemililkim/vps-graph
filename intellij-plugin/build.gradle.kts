@@ -1,4 +1,5 @@
 import org.gradle.api.tasks.Copy
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.gradle.api.tasks.Exec
 
 plugins {
@@ -76,13 +77,20 @@ intellijPlatform {
     pluginConfiguration {
         ideaVersion {
             sinceBuild = "251"
-            untilBuild = "251.*"
+            untilBuild = "262.*"
         }
     }
 
     pluginVerification {
         ides {
-            current()
+            // Lowest supported platform
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.1.7.2")
+
+		    // Current IntelliJ generation
+		    create(IntelliJPlatformType.IntellijIdea, "2026.2.1")
+
+			// Cross-IDE verification
+			create(IntelliJPlatformType.PyCharm, "2026.2.1")
         }
     }
 }

@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "com.ilkimgul.vpsgraph"
-    version = "0.1.0"
+    version = "0.1.1"
 }
 
 val packageServerHelper by tasks.registering(Tar::class) {

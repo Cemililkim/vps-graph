@@ -51,5 +51,5 @@ jobs:
       - name: Audit public source and archives
         run: >-
           node scripts/release-audit.mjs
-          --plugin-zip intellij-plugin/build/distributions/intellij-plugin-0.1.0.zip
-          --helper-archive build/distributions/vps-graph-server-helper-0.1.0.tar.gz
+          --plugin-zip intellij-plugin/build/distributions/intellij-plugin-0.1.1.zip
+          --helper-archive build/distributions/vps-graph-server-helper-0.1.1.tar.gz

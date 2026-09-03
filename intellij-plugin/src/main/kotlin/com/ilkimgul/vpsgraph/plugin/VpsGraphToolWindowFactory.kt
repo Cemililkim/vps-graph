@@ -7,8 +7,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ToolWindowAnchor
-import com.intellij.openapi.wm.ToolWindowType
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.openapi.fileChooser.FileChooser
@@ -18,7 +16,6 @@ import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.ui.jcef.JBCefBrowserBase
 import com.intellij.ui.jcef.JBCefJSQuery
 import java.awt.BorderLayout
-import java.awt.Rectangle
 import javax.swing.JPanel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -43,10 +40,6 @@ internal fun parseBridgeRequest(request: String): JsonObject? {
 }
 
 class VpsGraphToolWindowFactory : ToolWindowFactory {
-    override fun init(toolWindow: ToolWindow) {
-        toolWindow.setDefaultState(ToolWindowAnchor.RIGHT, ToolWindowType.DOCKED, Rectangle(0, 0, 960, 700))
-    }
-
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val content = if (!JBCefApp.isSupported()) {
             createUnavailablePanel()

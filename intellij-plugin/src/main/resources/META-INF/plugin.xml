@@ -17,6 +17,7 @@
     ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true" config-file="vpsgraph-jcef.xml">com.intellij.modules.jcef</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <iconMapper mappingFile="VpsGraphIconMappings.json" />
