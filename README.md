@@ -26,7 +26,7 @@ VPS Graph connects directly from the IDE to the selected VPS. It has no account,
 - the verified VPS host key in the local OpenSSH `known_hosts` file
 - optional reviewed server helper for Docker, Compose, Caddy, Systemd, and listener discovery
 
-SSH passwords, agents, passphrase UX, OpenSSH config parsing, ProxyJump, and bastion hosts are not supported in 0.1.0.
+SSH passwords, agents, passphrase UX, OpenSSH config parsing, ProxyJump, and bastion hosts are not supported in the 0.1.x line.
 
 ## Quick start
 

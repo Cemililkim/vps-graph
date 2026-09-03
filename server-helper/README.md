@@ -1,6 +1,6 @@
 # VPS Graph Docker, Caddy, Systemd, and Listener Inspection Helper
 
-This is the optional privileged server-side boundary for sanitized Docker, Compose, Caddy, Systemd, and host-listener metadata consumed by VPS Graph 0.1.0.
+This is the optional privileged server-side boundary for sanitized Docker, Compose, Caddy, Systemd, and host-listener metadata consumed by VPS Graph 0.1.x.
 
 ## Why this helper exists
 
@@ -28,7 +28,7 @@ Milestone 5A reuses this same historical helper name for optional host service a
 
 ## Installation
 
-Use the `server-helper/` directory from the same tagged source release as the plugin, or the matching `vps-graph-server-helper-0.1.0.tar.gz` release artifact. The source repository is [github.com/cemililkim/vps-graph](https://github.com/cemililkim/vps-graph); a direct archive URL will be published only with the matching GitHub Release. Verify the published SHA-256 file for download integrity, then extract and review every file before copying it to the VPS. The checksum detects download corruption; it is not a publisher signature. VPS Graph deliberately does not recommend `curl | sudo` installation.
+Use the `server-helper/` directory from the same tagged source release as the plugin, or the matching `vps-graph-server-helper-0.1.1.tar.gz` release artifact. The source repository is [github.com/cemililkim/vps-graph](https://github.com/cemililkim/vps-graph); a direct archive URL will be published only with the matching GitHub Release. Verify the published SHA-256 file for download integrity, then extract and review every file before copying it to the VPS. The checksum detects download corruption; it is not a publisher signature. VPS Graph deliberately does not recommend `curl | sudo` installation.
 
 Review these files on the target Linux VPS, then run explicitly as root through sudo:
 

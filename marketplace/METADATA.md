@@ -2,7 +2,7 @@
 
 - **Name:** VPS Graph
 - **Plugin ID:** `com.ilkimgul.vpsgraph`
-- **Version:** `0.1.0`
+- **Version:** `0.1.1`
 - **Tagline:** Explore what is running on your VPS and how it connects.
 - **Category:** Tools Integration
 - **Suggested tags:** VPS, Docker, DevOps, Infrastructure, SSH

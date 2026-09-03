@@ -66,12 +66,14 @@ for (const path of ['server-helper/install.sh', 'server-helper/README.md', 'docs
 function inspectPlugin(zipPath) {
   if (!existsSync(zipPath)) return fail(`plugin ZIP missing: ${zipPath}`)
   const entries = run('jar', ['tf', zipPath]).trim().split(/\r?\n/)
-  for (const required of ['intellij-plugin/lib/intellij-plugin-0.1.0.jar', 'intellij-plugin/lib/scanner-core-0.1.0.jar']) if (!entries.includes(required)) fail(`plugin ZIP missing ${required}`)
+  const pluginJarName = `intellij-plugin-${versions.gradle}.jar`
+  const scannerJarName = `scanner-core-${versions.gradle}.jar`
+  for (const required of [`intellij-plugin/lib/${pluginJarName}`, `intellij-plugin/lib/${scannerJarName}`]) if (!entries.includes(required)) fail(`plugin ZIP missing ${required}`)
   for (const entry of entries) if (/(?:^|\/)(?:tests?|snapshots?|node_modules|__pycache__)(?:\/|$)|\.map$|\.env(?:\.|$)|\.pyc$/i.test(entry)) fail(`unexpected plugin ZIP entry: ${entry}`)
   const directory = mkdtempSync(join(tmpdir(), 'vps-graph-plugin-'))
   try {
     run('jar', ['xf', resolve(zipPath)], directory)
-    const pluginJar = join(directory, 'intellij-plugin', 'lib', 'intellij-plugin-0.1.0.jar')
+    const pluginJar = join(directory, 'intellij-plugin', 'lib', pluginJarName)
     const jarEntries = run('jar', ['tf', pluginJar]).trim().split(/\r?\n/)
     if (!jarEntries.includes('META-INF/LICENSE') || !jarEntries.includes('META-INF/THIRD_PARTY_NOTICES.md')) fail('plugin ZIP is missing license material')
     for (const entry of jarEntries) {

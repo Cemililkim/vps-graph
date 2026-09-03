@@ -2,6 +2,15 @@
 
 All notable user-facing changes to VPS Graph are documented here. The 0.1.x line is a public beta and may evolve while preserving supported local history through explicit migrations where needed.
 
+## [0.1.1] - 2026-09-03
+
+### Fixed
+
+- Added compatibility with IntelliJ Platform 2026.2.
+- Fixed Tool Window initialization on newer JetBrains IDE versions.
+- Fixed JCEF class visibility on IntelliJ Platform 2026.2.
+- Verified compatibility with IntelliJ IDEA 2025.1, IntelliJ IDEA 2026.2, and PyCharm 2026.2.
+
 ## [0.1.0] - 2026-08-31
 
 ### Added
