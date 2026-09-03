@@ -6,7 +6,7 @@ This is the optional privileged server-side boundary for sanitized Docker, Compo
 
 Docker socket access is effectively a privileged capability. Adding the VPS Graph SSH user to the `docker` group, or granting it `sudo docker`, would let that account perform broad Docker operations and can lead to root-level host access.
 
-Instead, the SSH user receives exactly one passwordless sudo command with no arguments:
+Instead, the selected SSH user receives exactly one passwordless sudo command with no arguments. The `vpsgraph` username below is only an example; the helper is not hardcoded to that account:
 
 ```sudoers
 vpsgraph ALL=(root) NOPASSWD: /usr/local/libexec/vpsgraph-docker-scan ""
@@ -30,10 +30,48 @@ Milestone 5A reuses this same historical helper name for optional host service a
 
 Use the `server-helper/` directory from the same tagged source release as the plugin, or the matching `vps-graph-server-helper-0.1.0.tar.gz` release artifact. The source repository is [github.com/cemililkim/vps-graph](https://github.com/cemililkim/vps-graph); a direct archive URL will be published only with the matching GitHub Release. Verify the published SHA-256 file for download integrity, then extract and review every file before copying it to the VPS. The checksum detects download corruption; it is not a publisher signature. VPS Graph deliberately does not recommend `curl | sudo` installation.
 
+### Choose the SSH user
+
+The helper does **not** require a special or hardcoded username.
+
+For better privilege isolation, the recommended setup is to use a dedicated, unprivileged SSH account for VPS Graph, such as `vpsgraph`. This keeps VPS Graph SSH access and its single helper permission separate from your normal administrative account.
+
+Using an existing SSH account is also supported. In that case, pass that username to the installer instead.
+
+The installer does not create users. The selected account must already exist and should already be configured for the public-key SSH access you intend to use with VPS Graph.
+
+For example:
+
+```sh
+# Recommended: dedicated VPS Graph SSH user
+sudo sh ./install.sh vpsgraph
+
+# Also supported: an existing SSH user
+sudo sh ./install.sh deploy
+```
+
+The installer never adds the selected user to the `docker` group and never grants unrestricted sudo access. It only creates a sudoers rule allowing that user to execute the exact, argument-free VPS Graph helper command.
+
+With the recommended `vpsgraph` account, the resulting rule is:
+
+```sudoers
+vpsgraph ALL=(root) NOPASSWD: /usr/local/libexec/vpsgraph-docker-scan ""
+```
+
+If another username is supplied, the sudoers rule is generated for that account instead.
+
+### Install the helper
+
 Review these files on the target Linux VPS, then run explicitly as root through sudo:
 
 ```sh
 cd server-helper
+sudo sh ./install.sh <username>
+```
+
+For example:
+
+```sh
 sudo sh ./install.sh vpsgraph
 ```
 
@@ -41,12 +79,18 @@ The installer verifies Linux, Python 3, the target user, a trusted root-owned no
 
 ```text
 /usr/local/libexec/vpsgraph-docker-scan    root:root 0755
-/etc/sudoers.d/vpsgraph-docker-scan-vpsgraph    root:root 0440
+/etc/sudoers.d/vpsgraph-docker-scan-<username>    root:root 0440
 ```
 
 The sudoers file is syntax-checked by `visudo` before it replaces the active policy. The installer never modifies `/etc/sudoers`, installs packages, changes group membership, or restarts Docker.
 
-Uninstall only the matching helper artifacts:
+Uninstall only the matching helper artifacts by passing the same username used during installation:
+
+```sh
+sudo sh ./uninstall.sh <username>
+```
+
+For example:
 
 ```sh
 sudo sh ./uninstall.sh vpsgraph
@@ -156,35 +200,37 @@ Parser, sanitizer, detection, deterministic-output, and secret-exclusion tests r
 
 ## Manual VPS security test plan
 
-Do not run installation automatically from this repository. On a deliberately selected VPS after reviewing the helper, verify:
+Do not run installation automatically from this repository. On a deliberately selected VPS after reviewing the helper, set the username you installed the helper for and verify:
 
 ```sh
-sudo -l -U vpsgraph
-id -nG vpsgraph
-sudo -u vpsgraph docker ps
-sudo -u vpsgraph sudo -n docker ps
-sudo -u vpsgraph sudo -n /usr/local/libexec/vpsgraph-docker-scan foo
-sudo -u vpsgraph sudo -n /usr/local/libexec/vpsgraph-docker-scan
-sudo -u vpsgraph test ! -r /var/lib/docker/volumes/<caddy-config-volume>/_data/caddy/autosave.json
+VPSGRAPH_USER=vpsgraph
+
+sudo -l -U "$VPSGRAPH_USER"
+id -nG "$VPSGRAPH_USER"
+sudo -u "$VPSGRAPH_USER" docker ps
+sudo -u "$VPSGRAPH_USER" sudo -n docker ps
+sudo -u "$VPSGRAPH_USER" sudo -n /usr/local/libexec/vpsgraph-docker-scan foo
+sudo -u "$VPSGRAPH_USER" sudo -n /usr/local/libexec/vpsgraph-docker-scan
+sudo -u "$VPSGRAPH_USER" test ! -r /var/lib/docker/volumes/<caddy-config-volume>/_data/caddy/autosave.json
 ```
 
-Replace `<caddy-config-volume>` with the deliberately selected test VPS volume name; do not print the file while testing access controls.
+Replace `vpsgraph` with the SSH username you selected during helper installation. Replace `<caddy-config-volume>` with the deliberately selected test VPS volume name; do not print the file while testing access controls.
 
 Expected results:
 
-- `vpsgraph` is not in the `docker` group.
+- The selected SSH user is not in the `docker` group.
 - Direct `docker ps` fails unless the host independently grants Docker access.
 - `sudo -n docker ps` fails.
 - Supplying `foo` fails with `INVALID_INVOCATION`.
 - The argument-free helper succeeds and returns the unchanged Docker fields plus an optional sanitized `caddy` object.
 - Known domains and static reverse-proxy upstreams appear, but raw Caddy JSON, tokens, placeholders, headers, authentication data, and unrelated module fields do not.
-- `vpsgraph` still cannot read the mounted autosave file or access Docker directly.
+- The selected SSH user still cannot read the mounted autosave file or access Docker directly.
 - No Caddy Admin API or port `2019` exposure is required.
 
 After deliberately updating the already-installed helper, verify the additional sanitized sections without changing any service:
 
 ```sh
-sudo -u vpsgraph sudo -n /usr/local/libexec/vpsgraph-docker-scan \
+sudo -u "$VPSGRAPH_USER" sudo -n /usr/local/libexec/vpsgraph-docker-scan \
   | python3 -c '
 import sys,json
 d=json.load(sys.stdin)
@@ -194,8 +240,8 @@ for key in ("systemd","listeners"):
     print(" status:", x.get("status"))
     print(" reasons:", x.get("statusReasons"))
 '
-sudo -u vpsgraph sudo -n /usr/bin/systemctl list-units
-sudo -u vpsgraph sudo -n /usr/bin/ss -lntp
+sudo -u "$VPSGRAPH_USER" sudo -n /usr/bin/systemctl list-units
+sudo -u "$VPSGRAPH_USER" sudo -n /usr/bin/ss -lntp
 ```
 
 The helper must remain the only accepted sudo command. The direct `sudo systemctl` and `sudo ss` commands must fail. Confirm the complete JSON contains no `Environment`, `ExecStart`, `DATABASE_URL`, `PASSWORD`, `TOKEN`, `API_KEY`, `PRIVATE_KEY`, or command-line arguments. If a known host-native service listens on a port, compare its unit, listener, and conservative ownership result without restarting or reconfiguring anything.
