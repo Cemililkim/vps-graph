@@ -43,6 +43,20 @@ Basic host discovery does not need elevated access. Deeper Docker, Compose, Cadd
 
 Review the source before copying it to a VPS. VPS Graph does not install it automatically and does not recommend `curl | sudo` installation. See the [security model](docs/SECURITY_MODEL.md) for the complete boundary.
 
+### Recommended SSH user setup
+
+VPS Graph does not require a dedicated SSH username, but using a separate,
+unprivileged account such as `vpsgraph` is recommended for better privilege
+isolation.
+
+An existing SSH account is also supported. The optional server helper does not
+create users, add them to the `docker` group, or grant unrestricted sudo access.
+It only grants the selected SSH user permission to run the exact, argument-free
+VPS Graph inspection helper.
+
+See [`server-helper/README.md`](server-helper/README.md) for the complete setup
+and security model.
+
 ## Screenshots
 
 Final public screenshots must use sanitized example infrastructure. The required views and privacy checks are in [marketplace/SCREENSHOTS.md](marketplace/SCREENSHOTS.md).
